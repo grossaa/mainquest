@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>// ОСНОВНОЙ ХОСТ //</title>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            border: 1px solid #0f0;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+        h1 {
+            color: #0ff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .status {
+            background: rgba(0, 30, 0, 0.5);
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #f00;
+        }
+        .blink {
+            animation: blink 1s infinite;
+            color: #f00;
+            font-weight: bold;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .message {
+            color: #ff0;
+            font-size: 1.2em;
+            line-height: 1.6;
+            text-align: center;
+            padding: 20px;
+        }
+        .hint {
+            color: #0ff;
+            font-style: italic;
+            border-top: 1px dashed #0f0;
+            padding-top: 20px;
+            margin-top: 30px;
+            font-size: 0.9em;
+        }
+        .log {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            margin-top: 30px;
+            font-family: monospace;
+            font-size: 0.8em;
+            color: #0f0;
+            border: 1px solid #333;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>// ОСНОВНОЙ ХОСТ //</h1>
+        
+        <div class="status">
+            <p>> Статус системы: <span class="blink">ИНИЦИАЛИЗАЦИЯ</span></p>
+            <p>> Пользователь: <span id="user">[НЕ АУТЕНТИФИЦИРОВАН]</span></p>
+            <p>> Уровень доступа: <span id="access">0</span></p>
+        </div>
+        
+        <div class="message">
+            <p>Добро пожаловать в основную сеть.</p>
+            <p>Система находится в режиме подготовки.</p>
+            <p>Ожидайте дальнейших инструкций...</p>
+        </div>
+        
+        <div class="hint">
+            <p>> Ключ из локального хоста предоставит доступ к расширенным функциям.</p>
+            <p>> Следующий этап: SQL-инъекция, анализ трафика, дешифровка.</p>
+        </div>
+        
+        <div class="log">
+            <p>[00:00.00] Загрузка основного хоста...</p>
+            <p>[00:00.15] Проверка соединения... OK</p>
+            <p>[00:00.30] Загрузка модулей безопасности...</p>
+            <p>[00:00.45] Ожидание аутентификации...</p>
+            <p>[00:01.00] Готов к приёму кодов доступа</p>
+        </div>
+    </div>
+
+    <script>
+        // Простая анимация для имитации работы
+        let dots = 0;
+        setInterval(() => {
+            const status = document.querySelector('.blink');
+            dots = (dots + 1) % 4;
+            status.textContent = 'ИНИЦИАЛИЗАЦИЯ' + '.'.repeat(dots);
+        }, 500);
+        
+        // Логи в реальном времени
+        setTimeout(() => {
+            const log = document.querySelector('.log');
+            log.innerHTML += '<p>[00:01.30] Сканирование портов... 80, 443, 8080</p>';
+        }, 1500);
+        
+        setTimeout(() => {
+            const log = document.querySelector('.log');
+            log.innerHTML += '<p>[00:02.00] Обнаружен скрытый сервис</p>';
+        }, 3000);
+    </script>
+</body>
+</html>
