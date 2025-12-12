@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"><title>Справка</title>
+<head>
+<meta charset="UTF-8">
+<title>Справка</title>
 <style>
 body{background:#000;color:#0f0;font-family:'Courier New';text-align:center;padding-top:100px}
-.hidden{display:block}
+.hidden{display:none}
 .secret{color:#ff0000;font-size:24px;margin:30px}
 .download{color:#00ff00;font-size:20px;margin:20px}
 </style>
@@ -11,12 +13,18 @@ body{background:#000;color:#0f0;font-family:'Courier New';text-align:center;padd
 <body>
 <h1>Справка</h1>
 <p>КТО ЗДЕСЬ? Здесь что то есть?...</p>
-<div class="hidden">
-<div class="secret">Координаты: 55.751244, 37.618423<br>Азимут: 42.7°</div>
-<div class="download"><a href="secret.zip" style="color:#0f0">СКАЧАТЬ АРХИВ</a></div>
-</div>
+<div id="secret" class="hidden" data-c="NTUuNzUxMjQ0LDM3LjYxODQyMw==" data-a="NDIuNw=="></div>
 <script>
-console.log("💡 Подсказка: измени display:none на display:block для элемента .hidden");
+document.getElementById('secret').addEventListener('DOMAttrModified',function(e){
+if(e.attrName==='style'&&this.style.display==='block'){
+const coords=atob(this.getAttribute('data-c'));
+const azimuth=atob(this.getAttribute('data-a'));
+this.innerHTML=`
+<div class="secret">Координаты: ${coords}<br>Азимут: ${azimuth}°</div>
+<div class="download"><a href="secret.zip" style="color:#0f0">СКАЧАТЬ АРХИВ</a></div>
+`;
+}
+});
 </script>
 </body>
 </html>
