@@ -113,21 +113,18 @@
         const SALT = "Max"; // Замени на своё имя
         
        function checkHackCode() {
-    const input = document.getElementById('hackCode').value;
+    const input = document.getElementById('hackCode').value.trim().toLowerCase();
     
-    // Убираем все пробелы и приводим к нижнему регистру для надежности
-    const cleanInput = input.trim().toLowerCase();
-    
-    console.log('Проверяем:', cleanInput, 'ожидается: звезда');
-    
-    if (cleanInput === 'звезда') {
-        document.getElementById('step1').classList.add('hidden');
-        document.getElementById('step2').classList.remove('hidden');
+    // Простая и надежная проверка
+    if (input === 'звезда') {
+        // Скрываем первый экран, показываем второй
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'block';
         document.getElementById('codeError').style.display = 'none';
-        console.log('УСПЕХ!');
+        console.log('Код верный! Открываю форму для SQL-инъекции.');
     } else {
         document.getElementById('codeError').style.display = 'block';
-        console.log('НЕВЕРНО!');
+        console.log('Введен неверный код:', input);
     }
 }
             
