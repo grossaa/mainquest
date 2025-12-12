@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="UTF-8"><title>Система доступа</title>
+<style>
+body{background:#0a0a0a;color:#0f0;font-family:'Courier New';margin:0;padding:20px;overflow:hidden}
+.container{max-width:800px;margin:30px auto;border:1px solid #0f0;padding:20px;position:relative;z-index:1}
+input,button{display:block;width:100%;padding:12px;margin:10px 0;background:black;color:#0f0;border:1px solid #0f0;font-family:'Courier New';font-size:16px;box-sizing:border-box}
+button:hover{background:#0f0;color:#000;cursor:pointer}
+.hidden{display:none}
+.terminal{background:#111;border:1px solid #0f0;padding:15px;margin:15px 0;min-height:100px}
+.ad{position:fixed;background:#ff0000;color:#fff;padding:15px;border:3px solid #ffff00;font-size:20px;font-weight:bold;text-align:center;z-index:9999;box-shadow:0 0 20px #ff0000;cursor:move}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Система доступа</h1>
+<div id="step1">
+<p>Введите логин и пароль:</p>
+<input type="text" id="login" placeholder="Логин">
+<input type="password" id="pass" placeholder="Пароль">
+<button onclick="checkAccess()">Войти</button>
+<div id="error" class="hidden" style="color:red">Ошибка</div>
+</div>
+<div id="step2" class="hidden">
+<h2>Результаты запроса:</h2>
+<div id="output" class="terminal"></div>
+<p>Введите логин и пароль для входа:</p>
+<input type="text" id="realLogin" placeholder="Логин">
+<input type="password" id="realPass" placeholder="Пароль">
+<button onclick="realLogin()">Войти</button>
+</div>
+<div id="step3" class="hidden">
+<h2>Доступ разрешен</h2>
+<p>Ключ: <strong id="key">GHOST_ACCESS_KEK</strong></p>
+</div>
+</div>
+<script>
+const ads = [
+"ГОРЯЧАЯ МАМА В 1 КМ ОТ ВАС!","УРОКИ МИНЕТА ПО ТЕЛЕФОНУ","ВЫ ВЫИГРАЛИ АЙФОН!","ПОХУДЕТЬ НА 30 КГ ЗА ДЕНЬ","СРОЧНЫЙ ЗАЙМ ПОД 0%","ВАС СНИМАЕТ СКРЫТАЯ КАМЕРА",
+"СПОСОБ УВЕЛИЧИТЬ ЧЛЕН","ВАШ КОМП ЗАРАЖЕН","НАЙДЕН ПЕРЕПИСКА МУЖА","ВАС ИЩУТ ПОЛОВОЙ ПАРТНЕР","ВАС ЖДЕТ НАСЛЕДСТВО","ГАДАЛКА ПРЕДСКАЗАЛА",
+"ВАША КАРТА ЗАБЛОКИРОВАНА","СОСЕДИ ВАС НЕНАВИДЯТ","ВАС ДОБАВИЛИ В ЧАТ","ВЫ СТАЛИ ЖЕРТВОЙ МОШЕННИКОВ","СКАЧАТЬ ВИРУС БЕСПЛАТНО","ВАШ АККАУНТ ВЗЛОМАН",
+"СРОЧНО ПОЗВОНИТЕ В БАНК","ВАМ ПИШЕТ ДЕВУШКА","ВАШ ТЕЛЕФОН ЗАСЕКЛИ","ВАС ВЫБРАЛИ ЖЕРТВОЙ","У ВАС ЕСТЬ ТАЙНЫЙ ПОКЛОННИК","ВАША ФОТО УТЕКЛА В СЕТЬ"
+];
+let adCount = 0;
+function spawnAd(){if(adCount>=130)return;const ad=document.createElement('div');ad.className='ad';ad.textContent=ads[Math.floor(Math.random()*ads.length)];
+ad.style.left=Math.random()*90+'vw';ad.style.top=Math.random()*90+'vh';ad.style.transform=`rotate(${Math.random()*30-15}deg)`;
+document.body.appendChild(ad);adCount++;setTimeout(spawnAd,50);}
+setTimeout(spawnAd,1000);
+function checkAccess(){const l=document.getElementById('login').value;const p=document.getElementById('pass').value;if(l.includes("' OR '1'='1")||l.includes("' OR 1=1")){
+document.getElementById('step1').classList.add('hidden');document.getElementById('step2').classList.remove('hidden');
+const data=[{user:'Admin',pass:'root123',status:'заблокирован'},{user:'User',pass:'qwerty',status:'неактивен'},{user:'Ghost',pass:'phantom123',status:'активен'},
+{user:'Test',pass:'test123',status:'неактивен'},{user:'Support',pass:'help123',status:'заблокирован'}];
+let html='';data.forEach(r=>{html+=`${r.user} | ${r.pass} | ${r.status}<br>`;});document.getElementById('output').innerHTML=html;}else{document.getElementById('error').classList.remove('hidden');}}
+function realLogin(){const l=document.getElementById('realLogin').value;const p=document.getElementById('realPass').value;if(l==='Ghost'&&p==='phantom123'){
+document.getElementById('step2').classList.add('hidden');document.getElementById('step3').classList.remove('hidden');}}
+</script>
+</body>
+</html>
