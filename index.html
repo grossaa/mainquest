@@ -2,103 +2,77 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
     <title>Кибер-портал</title>
     <style>
-        body { background: #0a0a0a; color: #0f0; font-family: 'Courier New'; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 50px auto; border: 1px solid #0f0; padding: 30px; }
-        input, button { display: block; width: 100%; padding: 15px; margin: 10px 0; background: black; color: #0f0; border: 1px solid #0f0; font-size: 18px; box-sizing: border-box; }
-        button:hover { background: #0f0; color: black; cursor: pointer; }
-        .error { color: red; display: none; margin: 10px 0; }
-        .hidden { display: none; }
+        body{background:#0a0a0a;color:#0f0;font-family:'Courier New';margin:0;padding:20px}
+        .container{max-width:800px;margin:50px auto;border:1px solid #0f0;padding:30px}
+        input,button{display:block;width:100%;padding:15px;margin:10px 0;background:black;color:#0f0;border:1px solid #0f0;font-size:18px;box-sizing:border-box}
+        button:hover{background:#0f0;color:black;cursor:pointer}
+        .error{color:red;display:none;margin:10px 0}
+        .hidden{display:none}
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>⚡ ДОСТУП К СИСТЕМЕ ЗАБЛОКИРОВН ⚡</h1>
+        <h1>⚡ ДОСТУП К СИСТЕМЕ ЗАБЛОКИ⚡</h1>
         <div id="step1">
             <p>Для входа в портал требуется ввести хакерский код доступа.</p>
-            <p><strong>Подсказка:</strong> «Число, которое знает каждый хакер»</p>
+            <p><strong>Подсказка:</strong> «Хакерское число (4 цифры)»</p>
             <input type="text" id="hackCode" placeholder="Введите код доступа..." autocomplete="off">
-            <button onclick="checkHackCode()">Проверить код</button>
+            <button id="checkBtn">Проверить код</button>
             <div id="codeError" class="error">Неверный код!</div>
         </div>
         <div id="step2" class="hidden">
             <h2>✅ ДОСТУП РАЗРЕШЁН!</h2>
-            <p>Ключ для следующего этапа: <strong>CYBER_G1RL_ACCESS</strong></p>
-            <button onclick="goToNext()">Перейти к Room 1</button>
+            <button id="nextBtn">Перейти к Room 1</button>
         </div>
     </div>
 
     <script>
-function checkCode() {
-    console.log('Функция вызвана, ввод:', document.getElementById('hackCode').value);
-    
-    const input = document.getElementById('hackCode').value;
-    const error = document.getElementById('codeError');
-    
-    if (!input) {
-        error.style.display = 'block';
-        return;
-    }
-    
-    // ASCII проверка
-    let valid = false;
-    
-    if (input.length === 4) {
-        const c1 = input.charCodeAt(0);
-        const c2 = input.charCodeAt(1); 
-        const c3 = input.charCodeAt(2);
-        const c4 = input.charCodeAt(3);
-        
-        // H=72, A=65, C=67, K=75
-        if (c1 === 72 && c2 === 65 && c3 === 67 && c4 === 75) {
-            valid = true;
-        }
-    }
-    
-    console.log('Результат проверки:', valid);
-    
-    if (valid) {
-        document.getElementById('step1').classList.add('hidden');
-        document.getElementById('step2').classList.remove('hidden');
-        error.style.display = 'none';
-    } else {
-        error.style.display = 'block';
-    }
-}
-
-// ПРИВЯЗКА КНОПКИ ПРИ ЗАГРУЗКЕ
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Страница загружена');
-    
-    // Кнопка "Проверить код"
-    const checkBtn = document.getElementById('checkBtn');
-    if (checkBtn) {
-        checkBtn.addEventListener('click', checkCode);
-    }
-    
-    // Поле ввода + Enter
-    const hackCodeInput = document.getElementById('hackCode');
-    if (hackCodeInput) {
-        hackCodeInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkCode();
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            // Проверка кода
+            document.getElementById('checkBtn').addEventListener('click', function() {
+                const input = document.getElementById('hackCode').value;
+                const error = document.getElementById('codeError');
+                
+                let valid = false;
+                
+                if (input.length === 4) {
+                    const c1 = input.charCodeAt(0);
+                    const c2 = input.charCodeAt(1);
+                    const c3 = input.charCodeAt(2);
+                    const c4 = input.charCodeAt(3);
+                    
+                    // Код 1337: '1'=49, '3'=51, '3'=51, '7'=55
+                    if (c1 === 49 && c2 === 51 && c3 === 51 && c4 === 55) {
+                        valid = true;
+                    }
+                }
+                
+                if (valid) {
+                    document.getElementById('step1').classList.add('hidden');
+                    document.getElementById('step2').classList.remove('hidden');
+                    error.style.display = 'none';
+                } else {
+                    error.style.display = 'block';
+                }
+            });
+            
+            // Переход на room1
+            document.getElementById('nextBtn').addEventListener('click', function() {
+                window.location.href = 'room1.html';
+            });
+            
+            // Enter в поле ввода
+            document.getElementById('hackCode').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('checkBtn').click();
+                }
+            });
+            
+            // Фокус на поле
+            document.getElementById('hackCode').focus();
         });
-        hackCodeInput.focus();
-    }
-    
-    // Кнопка перехода
-    const nextBtn = document.getElementById('nextBtn');
-    if (nextBtn) {
-        nextBtn.addEventListener('click', function() {
-            window.location.href = 'room1.html';
-        });
-    }
-});
     </script>
 </body>
 </html>
