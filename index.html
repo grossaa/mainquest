@@ -17,7 +17,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>⚡ ДОСТУП К СИСТЕМЕ ЗАБЛОКИРОВАН ⚡</h1>
+        <h1>⚡ ДОСТУП К СИСТЕМЕ ЗАБЛОКИРОВН ⚡</h1>
         <div id="step1">
             <p>Для входа в портал требуется ввести хакерский код доступа.</p>
             <p><strong>Подсказка:</strong> «Число, которое знает каждый хакер»</p>
@@ -34,38 +34,32 @@
 
     <script>
 function checkCode() {
+    console.log('Функция вызвана, ввод:', document.getElementById('hackCode').value);
+    
     const input = document.getElementById('hackCode').value;
     const error = document.getElementById('codeError');
     
-    // ТОЛЬКО ASCII ПРОВЕРКА - НИКАКИХ СТРОК "HACK"
+    if (!input) {
+        error.style.display = 'block';
+        return;
+    }
+    
+    // ASCII проверка
     let valid = false;
     
     if (input.length === 4) {
-        // Получаем коды символов
-        const codes = [
-            input.charCodeAt(0),
-            input.charCodeAt(1), 
-            input.charCodeAt(2),
-            input.charCodeAt(3)
-        ];
+        const c1 = input.charCodeAt(0);
+        const c2 = input.charCodeAt(1); 
+        const c3 = input.charCodeAt(2);
+        const c4 = input.charCodeAt(3);
         
         // H=72, A=65, C=67, K=75
-        const check1 = codes[0] === 72; // H
-        const check2 = codes[1] === 65; // A  
-        const check3 = codes[2] === 67; // C
-        const check4 = codes[3] === 75; // K
-        
-        // Сумма ASCII для HACK = 279
-        const sum = codes[0] + codes[1] + codes[2] + codes[3];
-        const checkSum = sum === 279;
-        
-        // XOR проверка: H ^ A ^ C ^ K = 79
-        const xor = codes[0] ^ codes[1] ^ codes[2] ^ codes[3];
-        const checkXor = xor === 79;
-        
-        // Все проверки должны быть true
-        valid = check1 && check2 && check3 && check4 && checkSum && checkXor;
+        if (c1 === 72 && c2 === 65 && c3 === 67 && c4 === 75) {
+            valid = true;
+        }
     }
+    
+    console.log('Результат проверки:', valid);
     
     if (valid) {
         document.getElementById('step1').classList.add('hidden');
@@ -75,6 +69,36 @@ function checkCode() {
         error.style.display = 'block';
     }
 }
+
+// ПРИВЯЗКА КНОПКИ ПРИ ЗАГРУЗКЕ
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Страница загружена');
+    
+    // Кнопка "Проверить код"
+    const checkBtn = document.getElementById('checkBtn');
+    if (checkBtn) {
+        checkBtn.addEventListener('click', checkCode);
+    }
+    
+    // Поле ввода + Enter
+    const hackCodeInput = document.getElementById('hackCode');
+    if (hackCodeInput) {
+        hackCodeInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkCode();
+            }
+        });
+        hackCodeInput.focus();
+    }
+    
+    // Кнопка перехода
+    const nextBtn = document.getElementById('nextBtn');
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+            window.location.href = 'room1.html';
+        });
+    }
+});
     </script>
 </body>
 </html>
