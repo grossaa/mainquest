@@ -20,7 +20,7 @@ button:hover{background:#0f0;color:#000;cursor:pointer}
 <script>
 document.getElementById('checkBtn').onclick=function(){
 const input=document.getElementById('hackCode').value;
-if(input.length===4&&input.charCodeAt(0)===49&&input.charCodeAt(1)===51&&input.charCodeAt(2)===51&&input.charCodeAt(3)===55){
+if(input.length===2&&input.charCodeAt(0)===50&&input.charCodeAt(1)===57{
 window.location.href='room1.html';
 }else{document.getElementById('codeError').style.display='block';}};
 document.getElementById('hackCode').onkeypress=function(e){if(e.key==='Enter')document.getElementById('checkBtn').click();};
