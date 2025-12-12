@@ -33,93 +33,48 @@
     </div>
 
     <script>
-        // ===================== ГЕНЕРАЦИЯ ПРАВИЛЬНОГО КОДА =====================
-        // Никакого "1337" в коде нет! Вместо этого генерируем правильный код динамически
+function checkCode() {
+    const input = document.getElementById('hackCode').value;
+    const error = document.getElementById('codeError');
+    
+    // ТОЛЬКО ASCII ПРОВЕРКА - НИКАКИХ СТРОК "HACK"
+    let valid = false;
+    
+    if (input.length === 4) {
+        // Получаем коды символов
+        const codes = [
+            input.charCodeAt(0),
+            input.charCodeAt(1), 
+            input.charCodeAt(2),
+            input.charCodeAt(3)
+        ];
         
-        function generateCorrectCode() {
-            // Генерируем код 1337 из математических констант
-            const a = Math.floor(Math.PI * 100) % 1000; // 314
-            const b = Math.floor(Math.E * 50); // 135
-            const c = Math.floor(Math.sqrt(2) * 100); // 141
-            
-            // Путаница: создаем несколько вариантов, правильный - третий
-            const variants = [
-                (a + b) % 1000, // неверный
-                (b * c) % 10000, // неверный
-                1337, // правильный, но скрыто
-                (c - a) * 10 // неверный
-            ];
-            
-            // Возвращаем правильный вариант (индекс 2)
-            return variants[2];
-        }
+        // H=72, A=65, C=67, K=75
+        const check1 = codes[0] === 72; // H
+        const check2 = codes[1] === 65; // A  
+        const check3 = codes[2] === 67; // C
+        const check4 = codes[3] === 75; // K
         
-        // ===================== ПРОВЕРКА КОДА =====================
-        function checkHackCode() {
-            const input = document.getElementById('hackCode').value.trim();
-            const errorDiv = document.getElementById('codeError');
-            
-            // 1. Проверка длины
-            if (input.length !== 4) {
-                errorDiv.style.display = 'block';
-                return;
-            }
-            
-            // 2. Преобразуем в число
-            const num = Number(input);
-            if (isNaN(num)) {
-                errorDiv.style.display = 'block';
-                return;
-            }
-            
-            // 3. Получаем правильный код (динамически)
-            const correctCode = generateCorrectCode();
-            
-            // 4. Сложная проверка через математику
-            // Для 1337: (1+3+3+7) = 14, (1*3*3*7) = 63, 1337 % 7 = 1
-            const sumDigits = input.split('').reduce((a,b) => a + Number(b), 0);
-            const productDigits = input.split('').reduce((a,b) => a * Number(b), 1);
-            const modCheck = num % 7;
-            
-            // 5. Главная проверка - сравнение с динамически сгенерированным кодом
-            if (num === correctCode && sumDigits === 14 && productDigits === 63 && modCheck === 1) {
-                document.getElementById('step1').classList.add('hidden');
-                document.getElementById('step2').classList.remove('hidden');
-                errorDiv.style.display = 'none';
-            } else {
-                errorDiv.style.display = 'block';
-            }
-        }
+        // Сумма ASCII для HACK = 279
+        const sum = codes[0] + codes[1] + codes[2] + codes[3];
+        const checkSum = sum === 279;
         
-        // ===================== ПЕРЕХОД =====================
-        function goToNext() {
-            window.location.href = 'room1.html';
-        }
+        // XOR проверка: H ^ A ^ C ^ K = 79
+        const xor = codes[0] ^ codes[1] ^ codes[2] ^ codes[3];
+        const checkXor = xor === 79;
         
-        // ===================== ОБРАБОТЧИКИ =====================
-        document.getElementById('hackCode').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') checkHackCode();
-        });
-        
-        window.onload = () => {
-            document.getElementById('hackCode').focus();
-            // Принудительно сбросим кэш для скрипта
-            const scripts = document.getElementsByTagName('script');
-            for (let script of scripts) {
-                if (script.src) {
-                    script.src = script.src + '?v=' + new Date().getTime();
-                }
-            }
-        };
-        
-        // Дополнительная защита: если кто-то попытается найти "1337" в коде
-        // Создаем ложные строки для запутывания
-        const fakeCodes = ["1234", "4321", "1111", "9999", "0000", "7777"];
-        const fakeHash = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92";
-        const fakeCheck = () => {
-            console.log("Это ложная функция для запутывания");
-            return false;
-        };
+        // Все проверки должны быть true
+        valid = check1 && check2 && check3 && check4 && checkSum && checkXor;
+    }
+    
+    if (valid) {
+        document.getElementById('step1').classList.add('hidden');
+        document.getElementById('step2').classList.remove('hidden');
+        error.style.display = 'none';
+    } else {
+        error.style.display = 'block';
+    }
+}
     </script>
 </body>
 </html>
