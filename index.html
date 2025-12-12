@@ -112,18 +112,24 @@
         // Соль (можно менять)
         const SALT = "Max"; // Замени на своё имя
         
-        function checkHackCode() {
-            const input = document.getElementById('hackCode').value;
-            const hashInput = input + SALT;
-            
-            // Простое хэширование (SHA-256 эмуляция)
-            async function sha256(str) {
-                const buf = new TextEncoder().encode(str);
-                const hash = await crypto.subtle.digest('SHA-256', buf);
-                return Array.from(new Uint8Array(hash))
-                    .map(b => b.toString(16).padStart(2, '0'))
-                    .join('');
-            }
+       function checkHackCode() {
+    const input = document.getElementById('hackCode').value;
+    
+    // Убираем все пробелы и приводим к нижнему регистру для надежности
+    const cleanInput = input.trim().toLowerCase();
+    
+    console.log('Проверяем:', cleanInput, 'ожидается: звезда');
+    
+    if (cleanInput === 'звезда') {
+        document.getElementById('step1').classList.add('hidden');
+        document.getElementById('step2').classList.remove('hidden');
+        document.getElementById('codeError').style.display = 'none';
+        console.log('УСПЕХ!');
+    } else {
+        document.getElementById('codeError').style.display = 'block';
+        console.log('НЕВЕРНО!');
+    }
+}
             
             sha256(hashInput).then(hash => {
                 if (hash === CORRECT_HASH) {
