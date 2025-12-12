@@ -101,7 +101,7 @@
     <div class="glitch"></div>
     
     <div class="container">
-        <h1 class="blink">⚡ ДОСТУП К СИСТЕМЕ ЗАБЛОКИРОВАН ⚡</h1>
+        <h1 class="blink">⚡ ДОСТУП К СИСТЕМЕ ⚡</h1>
         
         <!-- Шаг 1: Ввод хакерского кода -->
         <div id="step1" class="step">
@@ -140,24 +140,27 @@
 
     <script>
         // Шаг 1: Проверка кода "звезда"
-        function checkHackCode() {
-            const input = document.getElementById('hackCode').value.trim().toLowerCase();
-            const errorDiv = document.getElementById('codeError');
-            
-            console.log('Проверка кода:', input);
-            
-            if (input === 'звезда') {
-                // Правильный код
-                document.getElementById('step1').classList.add('hidden');
-                document.getElementById('step2').classList.remove('hidden');
-                errorDiv.style.display = 'none';
-                console.log('Код верный!');
-            } else {
-                // Неверный код
-                errorDiv.style.display = 'block';
-                console.log('Неверный код!');
-            }
+      function checkHackCode() {
+        const input = document.getElementById('hackCode').value.trim();
+        // Зашифрованный код "звезда" ключом "love"
+        const correctEncrypted = [49, 36, 38, 33, 47, 48];
+        const key = "love";
+    
+        // Шифруем ввод тем же ключом
+        let encryptedInput = [];
+        for(let i = 0; i < input.length; i++) {
+            encryptedInput.push(input.charCodeAt(i) ^ key.charCodeAt(i % key.length));
         }
+    
+        // Сравниваем зашифрованные массивы
+        if (JSON.stringify(encryptedInput) === JSON.stringify(correctEncrypted)) {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+            document.getElementById('codeError').style.display = 'none';
+        } else {
+            document.getElementById('codeError').style.display = 'block';
+        }
+    }
         
         // Шаг 2: SQL-инъекция
         function hackSystem() {
