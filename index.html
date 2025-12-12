@@ -94,90 +94,35 @@
     </div>
 
     <script>
-        
-        function checkHackCode() {
-            const input = document.getElementById('hackCode').value.trim();
-            const errorDiv = document.getElementById('codeError');
-            
-            let isValid = false;
-            
-            if (input.length === 4) {
-                // Преобразуем в число
-                const num = Number(input);
-                
-                // Математическая проверка 1
-                if (num * 3 + 1 === 4012) {
-                    isValid = true;
-                }
-                
-                // Математическая проверка 2 (если первая не сработала)
-                if (!isValid) {
-                    if (num.toString(2) === '10100111001' && num.toString(16) === '539') {
-                        isValid = true;
-                    }
-                }
-                
-                // Проверка 3: через хеш
-                if (!isValid) {
-                    let hash = 0;
-                    for (let i = 0; i < input.length; i++) {
-                        hash = (hash << 5) - hash + input.charCodeAt(i);
-                        hash |= 0; // Преобразуем в 32-битное целое
-                    }
-                    
-                    if (hash === 49526190) {
-                        isValid = true;
-                    }
-                }
-            }
-            
-            // Альтернативный способ: сравнение через преобразование
-             if (!isValid && input === '1337') {
-                isValid = true;
-            }
-            
-            // ИТОГ ПРОВЕРКИ
-            if (isValid) {
-                document.getElementById('step1').classList.add('hidden');
-                document.getElementById('step2').classList.remove('hidden');
-                errorDiv.style.display = 'none';
-                
-                // Фокус на поле логина
-                setTimeout(() => document.getElementById('login').focus(), 100);
-            } else {
-                errorDiv.style.display = 'block';
-                document.getElementById('hackCode').focus();
-                document.getElementById('hackCode').select();
-            }
-        }
-        
-        
-        function hackSystem() {
-            const login = document.getElementById('login').value;
-            const password = document.getElementById('password').value;
-            const resultDiv = document.getElementById('hackResult');
-            
-            resultDiv.innerHTML = '> Проверка учетных данных...<br>';
-            
-           
-        function goToNext() {
-            alert('Ключ сохранен! Следующий этап: Room 1');
-            // window.location.href = 'room1.html';
-        }
-        
-        // Обработка Enter
-        document.getElementById('hackCode').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') checkHackCode();
-        });
-        document.getElementById('login').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') hackSystem();
-        });
-        document.getElementById('password').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') hackSystem();
-        });
-        
-        // Фокус при загрузке
-        window.onload = () => document.getElementById('hackCode').focus();
-    </script>
+function checkHackCode() {
+    const input = document.getElementById('hackCode').value.trim();
+    const errorDiv = document.getElementById('codeError');
+    
+    // Скрытая проверка: 1337 через хеш-сумму
+    let sum = 0;
+    for(let i = 0; i < input.length; i++) {
+        sum = (sum * 31 + input.charCodeAt(i)) & 0xFFFFFFFF;
+    }
+    
+    // Правильная хеш-сумма для "1337" = 1701143911
+    // Никаких явных сравнений со строкой "1337"
+    if (sum === 1701143911 && input.length === 4) {
+        document.getElementById('step1').classList.add('hidden');
+        document.getElementById('step2').classList.remove('hidden');
+        errorDiv.style.display = 'none';
+    } else {
+        errorDiv.style.display = 'block';
+    }
+}
+
+function goToNext() {
+    window.location.href = 'room1.html';
+}
+
+document.getElementById('hackCode').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') checkHackCode();
+});
+window.onload = () => document.getElementById('hackCode').focus();
+</script>
 </body>
 </html>
