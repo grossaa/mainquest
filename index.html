@@ -94,24 +94,13 @@
     </div>
 
     <script>
-        // ============================================
-        // ПРОВЕРКА КОДА (скрытая, код: 1337)
-        // ============================================
         
         function checkHackCode() {
             const input = document.getElementById('hackCode').value.trim();
             const errorDiv = document.getElementById('codeError');
             
-            // СКРЫТАЯ ПРОВЕРКА: код 1337
-            // Никаких строк "1337" в коде нет!
-            
-            // Способ 1: Математическая проверка
-            // 1337 * 3 + 1 = 4012
-            // 4012 / 3 = 1337.333... но в целых числах проверяем
-            
             let isValid = false;
             
-            // Проверка через математические свойства
             if (input.length === 4) {
                 // Преобразуем в число
                 const num = Number(input);
@@ -123,8 +112,6 @@
                 
                 // Математическая проверка 2 (если первая не сработала)
                 if (!isValid) {
-                    // 1337 в двоичной: 10100111001
-                    // 1337 в шестнадцатеричной: 0x539
                     if (num.toString(2) === '10100111001' && num.toString(16) === '539') {
                         isValid = true;
                     }
@@ -132,13 +119,12 @@
                 
                 // Проверка 3: через хеш
                 if (!isValid) {
-                    // Простой хеш для 1337
                     let hash = 0;
                     for (let i = 0; i < input.length; i++) {
                         hash = (hash << 5) - hash + input.charCodeAt(i);
                         hash |= 0; // Преобразуем в 32-битное целое
                     }
-                    // Хеш для "1337" = 49526190
+                    
                     if (hash === 49526190) {
                         isValid = true;
                     }
@@ -146,9 +132,9 @@
             }
             
             // Альтернативный способ: сравнение через преобразование
-            if (!isValid && input === '1337') {
-                isValid = true;
-            }
+           //  if (!isValid && input === '1337') {
+           //      isValid = true;
+           //  }
             
             // ИТОГ ПРОВЕРКИ
             if (isValid) {
@@ -165,9 +151,6 @@
             }
         }
         
-        // ============================================
-        // SQL-ИНЪЕКЦИЯ
-        // ============================================
         
         function hackSystem() {
             const login = document.getElementById('login').value;
@@ -176,51 +159,7 @@
             
             resultDiv.innerHTML = '> Проверка учетных данных...<br>';
             
-            setTimeout(() => {
-                // Паттерны SQL-инъекций
-                const sqlPatterns = [
-                    /' OR '1'='1/i,
-                    /' OR 1=1/i,
-                    /admin' --/i,
-                    /' OR 'a'='a/i
-                ];
-                
-                let hacked = false;
-                for (const pattern of sqlPatterns) {
-                    if (pattern.test(login) || pattern.test(password)) {
-                        hacked = true;
-                        break;
-                    }
-                }
-                
-                if (hacked) {
-                    resultDiv.innerHTML += '> Обнаружена SQL-инъекция!<br>';
-                    resultDiv.innerHTML += '> Обход аутентификации...<br>';
-                    
-                    setTimeout(() => {
-                        resultDiv.innerHTML += '> Доступ получен!<br>';
-                        resultDiv.innerHTML += '> <span style="color:#0f0">Ключ: CYBER_G1RL_ACCESS</span><br>';
-                        
-                        setTimeout(() => {
-                            document.getElementById('step2').classList.add('hidden');
-                            document.getElementById('step3').classList.remove('hidden');
-                        }, 1500);
-                    }, 1000);
-                } else if (login === 'admin' && password === 'admin') {
-                    resultDiv.innerHTML += '> Обычный вход...<br>';
-                    resultDiv.innerHTML += '> Доступ ограничен<br>';
-                    resultDiv.innerHTML += '> Попробуйте SQL-инъекцию<br>';
-                } else {
-                    resultDiv.innerHTML += '> Ошибка доступа<br>';
-                    resultDiv.innerHTML += '> Подсказка: используйте \' OR \'1\'=\'1<br>';
-                }
-            }, 800);
-        }
-        
-        // ============================================
-        // ПЕРЕХОД ДАЛЬШЕ
-        // ============================================
-        
+           
         function goToNext() {
             alert('Ключ сохранен! Следующий этап: Room 1');
             // window.location.href = 'room1.html';
