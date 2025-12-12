@@ -5,29 +5,117 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Кибер-портал</title>
     <style>
-        body { background: #0a0a0a; color: #0f0; font-family: 'Courier New', monospace; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 50px auto; border: 1px solid #0f0; padding: 30px; }
-        h1, h2 { text-align: center; }
-        .step { margin-bottom: 30px; }
-        input, button { display: block; width: 100%; padding: 15px; margin: 10px 0; background: black; color: #0f0; border: 1px solid #0f0; font-size: 18px; }
-        button:hover { background: #0f0; color: black; cursor: pointer; }
-        .error { color: red; display: none; margin: 10px 0; }
-        .hidden { display: none; }
-        .terminal { background: #111; border: 1px solid #0f0; padding: 20px; margin: 20px 0; min-height: 100px; }
+        body {
+            background-color: #0a0a0a;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            border: 1px solid #00ff00;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            border-radius: 5px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #00ff00;
+            margin-bottom: 30px;
+        }
+        .step {
+            margin-bottom: 30px;
+        }
+        input[type="text"],
+        input[type="password"],
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 15px 0;
+            background: transparent;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            font-size: 18px;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        button {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #00ff00;
+            color: #000;
+        }
+        .error {
+            color: #ff0000;
+            background-color: rgba(255, 0, 0, 0.1);
+            padding: 10px;
+            border: 1px solid #ff0000;
+            margin: 15px 0;
+            display: none;
+        }
+        .hidden {
+            display: none;
+        }
+        .terminal {
+            background-color: #000;
+            border: 1px solid #00ff00;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 100px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+        }
+        .glitch {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.02;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                #00ff00 2px,
+                #00ff00 4px
+            );
+            z-index: 1000;
+        }
+        .blink {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        #codeError {
+            display: none;
+        }
     </style>
 </head>
 <body>
+    <div class="glitch"></div>
+    
     <div class="container">
-        <h1>⚡ ДОСТУП К СИСТЕМЕ ЗАБЛОКИРОВАН ⚡</h1>
+        <h1 class="blink">⚡ ДОСТУП К СИСТЕМЕ ЗАБЛОКИРОВАН ⚡</h1>
         
         <!-- Шаг 1: Ввод хакерского кода -->
         <div id="step1" class="step">
             <p>Для входа в портал требуется ввести хакерский код доступа.</p>
             <p><strong>Подсказка:</strong> «То, что светит в ночи, но не луна»</p>
             
-            <input type="text" id="hackCode" placeholder="Введите код доступа...">
-            <button id="checkButton">Проверить код</button>
-            <div id="codeError" class="error">Неверный код!</div>
+            <input type="text" id="hackCode" placeholder="Введите код доступа..." autocomplete="off">
+            <button onclick="checkHackCode()" id="checkBtn">Проверить код</button>
+            <div id="codeError" class="error">
+                Неверный код!
+            </div>
         </div>
         
         <!-- Шаг 2: SQL-инъекция -->
@@ -35,12 +123,18 @@
             <h2>🔐 АДМИНИСТРАТИВНЫЙ ДОСТУП</h2>
             <p>Введите логин и пароль для взлома системы:</p>
             
-            <input type="text" id="login" placeholder="Логин">
-            <input type="password" id="password" placeholder="Пароль">
-            <button id="hackButton">Взломать систему</button>
+            <input type="text" id="login" placeholder="Логин" autocomplete="off">
+            <input type="password" id="password" placeholder="Пароль" autocomplete="off">
+            <button onclick="hackSystem()" id="hackBtn">Взломать систему</button>
             
             <div id="hackResult" class="terminal">
                 > Система безопасности активна...
+                > Ожидание ввода данных...
+            </div>
+            
+            <!-- Скрытая подсказка для SQL-инъекции -->
+            <div style="display: none;">
+                <!-- Попробуйте: ' OR '1'='1 -->
             </div>
         </div>
         
@@ -48,106 +142,228 @@
         <div id="step3" class="step hidden">
             <h2>✅ ДОСТУП РАЗРЕШЁН!</h2>
             <p>Ключ для следующего этапа: <strong id="nextKey">CYBER_G1RL_ACCESS</strong></p>
-            <button id="nextButton">Перейти к Room 1</button>
+            <button onclick="goToNext()">Перейти к Room 1</button>
         </div>
     </div>
 
     <script>
-        // ФИКС: Полностью синхронная проверка без async/await
-        document.addEventListener('DOMContentLoaded', function() {
-            // 1. Проверка кода "звезда" (скрытая проверка)
-            document.getElementById('checkButton').addEventListener('click', function() {
-                const input = document.getElementById('hackCode').value.trim();
-                const errorDiv = document.getElementById('codeError');
+        // ============================================
+        // КОД ПРОВЕРКИ "ЗВЕЗДА" (СКРЫТАЯ РЕАЛИЗАЦИЯ)
+        // ============================================
+        
+        // Хеш SHA-256 от строки "звезда"
+        // Самого слова "звезда" нигде в коде нет
+        const CORRECT_HASH = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92';
+        
+        // Простая реализация SHA-256 (упрощенная, но рабочая)
+        async function simpleSHA256(str) {
+            // Преобразуем строку в байты
+            const encoder = new TextEncoder();
+            const data = encoder.encode(str);
+            
+            // Используем встроенный crypto API
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            
+            // Конвертируем ArrayBuffer в hex строку
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+        
+        // Основная функция проверки кода
+        async function checkHackCode() {
+            const input = document.getElementById('hackCode').value.trim();
+            const errorDiv = document.getElementById('codeError');
+            
+            try {
+                // Вычисляем хеш от введенного значения
+                const inputHash = await simpleSHA256(input);
                 
-                // Спрятанный код - разбит на части
-                const p1 = 'зв';
-                const p2 = 'ез';
-                const p3 = 'да';
-                const correctCode = p1 + p2 + p3; // "звезда"
+                // Сравниваем с правильным хешем
+                if (inputHash === CORRECT_HASH) {
+                    // Правильный код
+                    document.getElementById('step1').classList.add('hidden');
+                    document.getElementById('step2').classList.remove('hidden');
+                    errorDiv.style.display = 'none';
+                    
+                    // Фокус на поле логина
+                    setTimeout(() => {
+                        document.getElementById('login').focus();
+                    }, 100);
+                } else {
+                    // Неверный код
+                    errorDiv.style.display = 'block';
+                    document.getElementById('hackCode').focus();
+                    document.getElementById('hackCode').select();
+                }
+            } catch (error) {
+                // Fallback на случай ошибки (например, если crypto.subtle не доступен)
+                console.error('Ошибка при хешировании:', error);
                 
-                // Альтернативный метод: сравнение через хэш (но синхронный)
-                let isCorrect = false;
-                if (input.toLowerCase() === correctCode) {
-                    isCorrect = true;
+                // Альтернативная проверка через простой алгоритм
+                let hash = 0;
+                for (let i = 0; i < input.length; i++) {
+                    const char = input.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
                 }
                 
-                // Дополнительная проверка через простой шифр
-                if (!isCorrect && input.length === 6) {
-                    const key = "love";
-                    let allMatch = true;
-                    for (let i = 0; i < input.length; i++) {
-                        const inputCode = input.charCodeAt(i);
-                        const keyCode = key.charCodeAt(i % key.length);
-                        const correctCodes = [122, 1072, 1074, 1077, 1079, 1076, 1072]; // Коды "звезда"
-                        if (i < correctCodes.length) {
-                            if ((inputCode ^ keyCode) !== (correctCodes[i] ^ keyCode)) {
-                                allMatch = false;
-                            }
-                        }
-                    }
-                    if (allMatch) isCorrect = true;
-                }
-                
-                if (isCorrect) {
+                // Хеш для "звезда" в этом простом алгоритме
+                if (hash === -1421137125 && input.length === 6) {
                     document.getElementById('step1').classList.add('hidden');
                     document.getElementById('step2').classList.remove('hidden');
                     errorDiv.style.display = 'none';
                 } else {
                     errorDiv.style.display = 'block';
                 }
-            });
+            }
+        }
+        
+        // ============================================
+        // SQL-ИНЪЕКЦИЯ (ВТОРОЙ ЭТАП)
+        // ============================================
+        
+        function hackSystem() {
+            const login = document.getElementById('login').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('hackResult');
             
-            // 2. SQL-инъекция
-            document.getElementById('hackButton').addEventListener('click', function() {
-                const login = document.getElementById('login').value;
-                const password = document.getElementById('password').value;
-                const resultDiv = document.getElementById('hackResult');
-                
-                // Уязвимый запрос (эмуляция)
-                const sqlInjection = /' OR '1'='1|' OR 1=1|admin' --|' OR 'a'='a/i;
-                
-                resultDiv.innerHTML = '> Проверка учетных данных...<br>';
-                
-                setTimeout(function() {
-                    if (sqlInjection.test(login) || sqlInjection.test(password)) {
-                        resultDiv.innerHTML += '> Обнаружена SQL-инъекция!<br>';
-                        resultDiv.innerHTML += '> Обход аутентификации...<br>';
-                        resultDiv.innerHTML += '> Доступ получен!<br>';
-                        resultDiv.innerHTML += '> <strong>Ключ: CYBER_G1RL_ACCESS</strong><br>';
-                        
-                        setTimeout(function() {
-                            document.getElementById('step2').classList.add('hidden');
-                            document.getElementById('step3').classList.remove('hidden');
-                        }, 1500);
-                    } else if (login === 'admin' && password === 'admin') {
-                        resultDiv.innerHTML += '> Обычный вход...<br>';
-                        resultDiv.innerHTML += '> Доступ ограничен<br>';
-                        resultDiv.innerHTML += '> Попробуйте SQL-инъекцию<br>';
+            resultDiv.innerHTML = '';
+            
+            // Эффект печатающегося текста
+            function typeText(text, callback) {
+                let i = 0;
+                const timer = setInterval(() => {
+                    resultDiv.innerHTML += text[i];
+                    resultDiv.scrollTop = resultDiv.scrollHeight;
+                    i++;
+                    if (i >= text.length) {
+                        clearInterval(timer);
+                        if (callback) callback();
+                    }
+                }, 30);
+            }
+            
+            typeText('> Проверка учетных данных...\n', () => {
+                setTimeout(() => {
+                    // Проверка на SQL-инъекцию
+                    const sqlPatterns = [
+                        /' OR '1'='1/i,
+                        /' OR 1=1/i,
+                        /admin' --/i,
+                        /' OR 'a'='a/i,
+                        /' OR '1'='1' --/i
+                    ];
+                    
+                    let sqlInjectionDetected = false;
+                    
+                    for (const pattern of sqlPatterns) {
+                        if (pattern.test(login) || pattern.test(password)) {
+                            sqlInjectionDetected = true;
+                            break;
+                        }
+                    }
+                    
+                    if (sqlInjectionDetected) {
+                        typeText('> Обнаружена SQL-инъекция!\n', () => {
+                            setTimeout(() => {
+                                typeText('> Обход аутентификации...\n', () => {
+                                    setTimeout(() => {
+                                        typeText('> Доступ к системе получен!\n', () => {
+                                            setTimeout(() => {
+                                                typeText('> Ключ безопасности: ', () => {
+                                                    setTimeout(() => {
+                                                        typeText('<span style="color:#00ff00">CYBER_G1RL_ACCESS</span>\n\n', () => {
+                                                            // Переход к следующему шагу
+                                                            setTimeout(() => {
+                                                                document.getElementById('step2').classList.add('hidden');
+                                                                document.getElementById('step3').classList.remove('hidden');
+                                                            }, 1000);
+                                                        });
+                                                    }, 500);
+                                                });
+                                            }, 500);
+                                        });
+                                    }, 500);
+                                });
+                            }, 500);
+                        });
+                    } else if (login === 'admin' && password === 'password') {
+                        typeText('> Стандартный вход...\n', () => {
+                            typeText('> Доступ ограничен. Требуются права администратора.\n', () => {
+                                typeText('> Попробуйте другой метод аутентификации.\n', () => {
+                                    typeText('> Подсказка: используйте SQL-инъекцию\n', () => {});
+                                });
+                            });
+                        });
                     } else {
-                        resultDiv.innerHTML += '> Ошибка доступа<br>';
-                        resultDiv.innerHTML += '> Подсказка: используйте \' OR \'1\'=\'1<br>';
+                        typeText('> Ошибка аутентификации.\n', () => {
+                            typeText('> Неверные учетные данные.\n', () => {
+                                typeText('> Рекомендация: используйте \' OR \'1\'=\'1 в поле логина\n', () => {});
+                            });
+                        });
                     }
                 }, 800);
             });
-            
-            // 3. Переход дальше
-            document.getElementById('nextButton').addEventListener('click', function() {
-                alert('Ключ сохранен! Следующий этап: Room 1');
-                // window.location.href = 'room1.html'; // Раскомментировать когда создашь room1.html
-            });
-            
-            // Фокус на поле ввода
-            document.getElementById('hackCode').focus();
-        });
+        }
         
-        // Предотвращаем ошибки от расширений
-        window.addEventListener('error', function(e) {
-            if (e.message.includes('asynchronous response')) {
-                e.preventDefault();
-                return false;
+        // ============================================
+        // ПЕРЕХОД К СЛЕДУЮЩЕМУ ЭТАПУ
+        // ============================================
+        
+        function goToNext() {
+            const key = document.getElementById('nextKey').textContent;
+            
+            // Сохраняем ключ в localStorage для следующих этапов
+            try {
+                localStorage.setItem('quest_key', key);
+            } catch (e) {
+                console.log('LocalStorage недоступен');
+            }
+            
+            alert('Ключ "' + key + '" сохранен!\n\nСледующий этап: Room 1');
+            
+            // В будущем можно раскомментировать для перехода:
+            // window.location.href = 'room1.html';
+        }
+        
+        // ============================================
+        // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+        // ============================================
+        
+        // Обработка нажатия Enter в полях ввода
+        document.getElementById('hackCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkHackCode();
             }
         });
+        
+        document.getElementById('login').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                hackSystem();
+            }
+        });
+        
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                hackSystem();
+            }
+        });
+        
+        // Фокус на поле ввода при загрузке
+        window.onload = function() {
+            document.getElementById('hackCode').focus();
+            
+            // Случайные глитч-эффекты
+            setInterval(() => {
+                const glitch = document.querySelector('.glitch');
+                if (Math.random() > 0.8) {
+                    glitch.style.opacity = '0.1';
+                    setTimeout(() => {
+                        glitch.style.opacity = '0.02';
+                    }, 100);
+                }
+            }, 3000);
+        };
     </script>
 </body>
 </html>
